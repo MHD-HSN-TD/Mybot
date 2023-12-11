@@ -45,7 +45,7 @@ MybotHardwareInterface::MybotHardwareInterface(ros::NodeHandle &node_handle, ros
 
 
     //TODO:update port_name_
-    port_name_ = private_node_handle_.param("port", "/dev/robomagellan_arduino"s);
+    port_name_ = private_node_handle_.param("port", "/dev/arduino_port"s);
 
     tryToOpenPort();
 
@@ -108,26 +108,26 @@ void MybotHardwareInterface::read()
             return;
         }
 
-        joint_positions_[0] = rotationsToRadians(std::stod(tokens[0]));
-        joint_positions_[1] = rotationsToRadians(std::stod(tokens[1]));
-        joint_velocities_[0] = rpsToRadPerSec(std::stod(tokens[2]));
-        joint_velocities_[1] = rpsToRadPerSec(std::stod(tokens[3]));
-        const auto battery_voltage = std::stod(tokens[4]);
+        // joint_positions_[0] = rotationsToRadians(std::stod(tokens[0]));
+        // joint_positions_[1] = rotationsToRadians(std::stod(tokens[1]));
+        joint_velocities_[0] = rpsToRadPerSec(std::stod(tokens[0])); //? i was tokens[2]
+        joint_velocities_[1] = rpsToRadPerSec(std::stod(tokens[1])); //? i was tokens[2]
+        // const auto battery_voltage = std::stod(tokens[4]);
 
-        sensor_msgs::BatteryState battery_msg;
-        battery_msg.voltage = battery_voltage;
-        battery_msg.present = battery_voltage > 4.0;
-        battery_msg.current = NAN;
-        battery_msg.charge = NAN;
-        battery_msg.capacity = NAN;
-        battery_msg.design_capacity = NAN;
-        battery_msg.percentage = NAN;
-        battery_msg.power_supply_status = battery_msg.present
-                                          ? sensor_msgs::BatteryState::POWER_SUPPLY_STATUS_DISCHARGING
-                                          : sensor_msgs::BatteryState::POWER_SUPPLY_STATUS_UNKNOWN;
-        battery_msg.power_supply_health = sensor_msgs::BatteryState::POWER_SUPPLY_HEALTH_UNKNOWN;
-        battery_msg.power_supply_technology = sensor_msgs::BatteryState::POWER_SUPPLY_TECHNOLOGY_NIMH;
-        battery_publisher_.publish(battery_msg);
+        // sensor_msgs::BatteryState battery_msg;
+        // battery_msg.voltage = battery_voltage;
+        // battery_msg.present = battery_voltage > 4.0;
+        // battery_msg.current = NAN;
+        // battery_msg.charge = NAN;
+        // battery_msg.capacity = NAN;
+        // battery_msg.design_capacity = NAN;
+        // battery_msg.percentage = NAN;
+        // battery_msg.power_supply_status = battery_msg.present
+        //                                   ? sensor_msgs::BatteryState::POWER_SUPPLY_STATUS_DISCHARGING
+        //                                   : sensor_msgs::BatteryState::POWER_SUPPLY_STATUS_UNKNOWN;
+        // battery_msg.power_supply_health = sensor_msgs::BatteryState::POWER_SUPPLY_HEALTH_UNKNOWN;
+        // battery_msg.power_supply_technology = sensor_msgs::BatteryState::POWER_SUPPLY_TECHNOLOGY_NIMH;
+        // battery_publisher_.publish(battery_msg);
 
         last_sent_message_.clear();
     } catch(const std::exception& e)
@@ -160,6 +160,43 @@ void MybotHardwareInterface::write(const ros::Duration& elapsed_time)
         serial_port_.close();
     }
 }
+
+// void MybotHardwareInterface::write(const ros::Duration &elapsed_time)
+// {
+//     if (!serial_port_.isOpen())
+//         return;
+
+//     try
+//     {
+//         velocity_joint_soft_limits_interface_.enforceLimits(elapsed_time);
+
+//         // Assuming you have linear and angular velocities
+//         const auto V = linear_velocity;      // Replace with your actual linear velocity
+//         const auto omega = angular_velocity; // Replace with your actual angular velocity
+
+//         // Calculate left and right wheel velocities using the kinematic model
+//         const auto left_velocity = (V - (L * omega) / 2.0) / R;
+//         const auto right_velocity = (V + (L * omega) / 2.0) / R;
+
+//         // Convert wheel velocities to RPM
+//         const auto left_rpm = radPerSecTORPS(left_velocity);
+//         const auto right_rpm = radPerSecTORPS(right_velocity);
+
+//         // Construct and send the serial message
+//         const auto serial_message =
+//             "$" + std::to_string(left_rpm) + ", " + std::to_string(right_rpm) +
+//             "\n";
+
+//         serial_port_.write(serial_message);
+
+//         last_sent_message_ = serial_message;
+//     }
+//     catch (const std::exception &e)
+//     {
+//         ROS_WARN_STREAM("Serial exception: " << e.what());
+//         serial_port_.close();
+//     }
+// }
 
 void MybotHardwareInterface::tryToOpenPort()
 {

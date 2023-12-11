@@ -20,13 +20,15 @@ class MybotHardwareInterface : public hardware_interface::RobotHW
 public:
   MybotHardwareInterface(ros::NodeHandle &node_handle, ros::NodeHandle& private_node_handle); //constructor
   ~MybotHardwareInterface() = default; //destructor
+  void setupJoint(const std::string &name, int index);
+  void update(const ros::TimerEvent &e);
+  void read();
+  void write(const ros::Duration &elapsed_time);
+  void tryToOpenPort();
+  ros::Publisher pub;
 
 private:
-  void setupJoint(const std::string& name, int index);
-  void update(const ros::TimerEvent& e);
-  void read();
-  void write(const ros::Duration& elapsed_time);
-  void tryToOpenPort();
+
 
   hardware_interface::JointStateInterface joint_state_interface_;
   hardware_interface::VelocityJointInterface velocity_joint_interface_;
