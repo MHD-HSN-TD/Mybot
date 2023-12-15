@@ -110,8 +110,8 @@ void MybotHardwareInterface::read()
 
         // joint_positions_[0] = rotationsToRadians(std::stod(tokens[0]));
         // joint_positions_[1] = rotationsToRadians(std::stod(tokens[1]));
-        joint_velocities_[0] = rpsToRadPerSec(std::stod(tokens[0])); //? i was tokens[2]
-        joint_velocities_[1] = rpsToRadPerSec(std::stod(tokens[1])); //? i was tokens[2]
+        joint_velocities_[0] = rpsToRadPerSec(std::stod(tokens[0])); //? it was tokens[2]
+        joint_velocities_[1] = rpsToRadPerSec(std::stod(tokens[1])); //? it was tokens[2]
         // const auto battery_voltage = std::stod(tokens[4]);
 
         // sensor_msgs::BatteryState battery_msg;
