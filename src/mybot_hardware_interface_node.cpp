@@ -9,7 +9,7 @@ int main(int argc, char **argv)
     ros::NodeHandle private_node_handle("~");
     node_handle.setCallbackQueue(&callback_queue);
     mybot_hardware_interface::MybotHardwareInterface hardware_interface(node_handle, private_node_handle);
-    ros::MultiThreadedSpinner spinner;
+    ros::MultiThreadedSpinner spinner; //run multithreading 
     spinner.spin(&callback_queue);
     return 0;
 }

@@ -79,6 +79,7 @@ void MybotHardwareInterface::update(const ros::TimerEvent& e)
     write(elapsed_time);
 }
 
+
 void MybotHardwareInterface::read()
 {
     if(!serial_port_.isOpen())
@@ -101,7 +102,7 @@ void MybotHardwareInterface::read()
         tokens.erase(std::remove(tokens.begin(), tokens.end(), ""),
                      tokens.end());
 
-        if (tokens.size() != 5) {
+        if (tokens.size() != 2) {
             ROS_WARN_STREAM(
                 "Received message did not contain the right number of tokens. Expected 5, but got "
                     << tokens.size() << "\n" << serial_message);

@@ -24,7 +24,7 @@ public:
   void update(const ros::TimerEvent &e);
   void read();
   void write(const ros::Duration &elapsed_time);
-  void tryToOpenPort();
+  void tryToOpenPort(); //Arduino test
   ros::Publisher pub;
 
 private:

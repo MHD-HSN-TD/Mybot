@@ -1,7 +1,7 @@
 <launch>
     <rosparam file="$(find mybot_hardware_interface)/config/joint_state_controller.yaml" command="load"/>
     <rosparam file="$(find mybot_hardware_interface)/config/diff_drive_controller.yaml" command="load"/>
-    <!-- <rosparam file="$(find mybot_hardware_interface)/config/joint_limits.yaml" command="load"/> -->
+    <rosparam file="$(find mybot_hardware_interface)/config/joint_limits.yaml" command="load"/>
 
     <remap from="/mybot/diff_drive_controller/odom" to="/odometry/wheel"/>
     <remap from="/mybot/diff_drive_controller/cmd_vel" to="/cmd_vel"/>
