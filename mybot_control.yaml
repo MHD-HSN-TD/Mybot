@@ -1,9 +1,0 @@
-mybot_hw_interface:
-  type: "mybot_hardware_interface/MybotHardwareInterface"
-  joint_left_wheel: "left_wheel_joint"
-  joint_right_wheel: "right_wheel_joint"
-
-controller_manager:
-  joints:
-    - joint_left_wheel
-    - joint_right_wheel
