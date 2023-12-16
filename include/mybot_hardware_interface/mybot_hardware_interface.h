@@ -36,7 +36,7 @@ private:
 
   std::string port_name_;
 
-//   std::array<double, 2> joint_positions_ = {};
+  std::array<double, 2> joint_positions_ = {};
   std::array<double, 2> joint_velocities_ = {};
   // std::array<double, 2> joint_efforts_ = {};
   std::array<double, 2> joint_velocity_commands_ = {};

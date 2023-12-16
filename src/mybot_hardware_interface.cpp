@@ -57,7 +57,7 @@ MybotHardwareInterface::MybotHardwareInterface(ros::NodeHandle &node_handle, ros
 
 void MybotHardwareInterface::setupJoint(const std::string& name, int index)
 {
-    JointStateHandle joint_state_handle(name, &joint_velocities_[index], &joint_efforts_[index]);
+    JointStateHandle joint_state_handle(name, &joint_positions_[index], &joint_velocities_[index], &joint_efforts_[index]);
     joint_state_interface_.registerHandle(joint_state_handle);
 
     JointHandle joint_velocity_handle(joint_state_handle, &joint_velocity_commands_[index]);
@@ -67,6 +67,7 @@ void MybotHardwareInterface::setupJoint(const std::string& name, int index)
     VelocityJointSoftLimitsHandle joint_limits_handle(joint_velocity_handle, limits, soft_limits);
     velocity_joint_soft_limits_interface_.registerHandle(joint_limits_handle);
     velocity_joint_interface_.registerHandle(joint_velocity_handle);
+}
 }
 
 void MybotHardwareInterface::update(const ros::TimerEvent& e)
@@ -113,6 +114,9 @@ void MybotHardwareInterface::read()
         joint_positions_[1] = rotationsToRadians(std::stod(tokens[1]));
         joint_velocities_[0] =radPerSecTORPS(std::stod(tokens[2])); //? feedBack is the same input
         joint_velocities_[1] = radPerSecTORPS(std::stod(tokens[3])); //? feedBack is the same input
+
+        //^ battery_publisher_ = node_handle_.advertise<sensor_msgs::BatteryState>("/vel", 1);
+
         // const auto battery_voltage = std::stod(tokens[4]);
 
         // sensor_msgs::BatteryState battery_msg;
