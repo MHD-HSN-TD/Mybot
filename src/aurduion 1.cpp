@@ -2,13 +2,13 @@
 
 const int left_step_pin = 3;
 const int left_dir_pin = 4;
-const int left_encoder_pinA = 5;
-const int left_encoder_pinB = 6;
+//const int left_encoder_pinA = 5;
+//const int left_encoder_pinB = 6;
 
 const int right_step_pin = 7;
 const int right_dir_pin = 8;
-const int right_encoder_pinA = 9;
-const int right_encoder_pinB = 10;
+//const int right_encoder_pinA = 9;
+//const int right_encoder_pinB = 10;
 
 //const int battery_pin = A0;
 //const double battery_factor = 7.2 / 1024;
@@ -26,7 +26,7 @@ void setup() {
   left_motor.setAcceleration(1000.0);
   right_motor.setAcceleration(1000.0);
 
-  pinMode(battery_pin, INPUT);
+  //pinMode(battery_pin, INPUT);
 
   Serial.begin(115200);
 }
@@ -51,6 +51,9 @@ void parseCommand()
   right_motor.setSpeed(-1 * Serial.parseInt());
   Serial.read(); // Take the newline out of the receive buffer
 }
+float left_stepsPerSecond = left_motor.speed();
+float right_stepsPerSecond = right_motor.speed();
+
 
 void sendReply()
 {
@@ -59,9 +62,9 @@ void sendReply()
   Serial.print(",");
   Serial.print(-1 * right_motor.currentPosition());
   Serial.print(",");
-  Serial.print(left_motor.speed());
+  Serial.print(left_stepsPerSecond);
   Serial.print(",");
-  Serial.print(-1 * right_motor.speed());
+  Serial.print(-1 * left_stepsPerSecond);
   Serial.print(",");
  // Serial.print(battery_factor * analogRead(battery_pin));
   Serial.println();

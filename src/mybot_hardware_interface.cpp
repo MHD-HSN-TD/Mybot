@@ -30,6 +30,19 @@ constexpr double radPerSecTORPS(double rad_per_sec)
     return rad_per_sec * 0.5 * M_1_PI;
 }
 
+
+constexpr double convertStepsToRadians(double stepsPerSecond) {
+  const double stepsPerRevolution = 200.0; // Adjust this value if necessary
+  const double radiansPerSecond = (stepsPerSecond / stepsPerRevolution) * (2 * M_PI);
+  return radiansPerSecond;
+
+double convertRadiansToSteps(double radiansPerSecond) {
+  const double stepsPerRevolution = 200.0; // Adjust this value if necessary
+  const double stepsPerSecond = (radiansPerSecond / (2 * M_PI)) * stepsPerRevolution;
+  return stepsPerSecond;
+}
+
+
 MybotHardwareInterface::MybotHardwareInterface(ros::NodeHandle &node_handle, ros::NodeHandle& private_node_handle)
     : node_handle_(node_handle),
       private_node_handle_(private_node_handle)
@@ -112,8 +125,12 @@ void MybotHardwareInterface::read()
 
         joint_positions_[0] = rotationsToRadians(std::stod(tokens[0]));
         joint_positions_[1] = rotationsToRadians(std::stod(tokens[1]));
-        joint_velocities_[0] =radPerSecTORPS(std::stod(tokens[2])); //? feedBack is the same input
-        joint_velocities_[1] = radPerSecTORPS(std::stod(tokens[3])); //? feedBack is the same input
+        // joint_velocities_[0] =radPerSecTORPS(std::stod(tokens[2])); //? feedBack is the same input
+        // joint_velocities_[1] = radPerSecTORPS(std::stod(tokens[3])); //? feedBack is the same input
+
+        joint_velocities_[0] =convertRadiansToSteps(std::stod(tokens[2])); //? feedBack is the same input
+        joint_velocities_[1] = convertRadiansToSteps(std::stod(tokens[3])); //? feedBack is the same input
+
 
         //^ battery_publisher_ = node_handle_.advertise<sensor_msgs::BatteryState>("/vel", 1);
 
@@ -149,11 +166,11 @@ void MybotHardwareInterface::write(const ros::Duration& elapsed_time)
     try {
         velocity_joint_soft_limits_interface_.enforceLimits(elapsed_time);
 
-        const auto left_rpm = radPerSecTORPS(joint_velocity_commands_[0]);
-        const auto right_rpm = radPerSecTORPS(joint_velocity_commands_[1]);
+        const auto left_steps = convertRadiansToSteps(joint_velocity_commands_[0]);
+        const auto right_steps = convertRadiansToSteps(joint_velocity_commands_[1]);
 
         const auto serial_message =
-            "$" + std::to_string(left_rpm) + ", " + std::to_string(right_rpm) +
+            "$" + std::to_string(left_steps) + ", " + std::to_string(right_steps) +
             "\n";
 
         serial_port_.write(serial_message);
