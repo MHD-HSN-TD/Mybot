@@ -38,7 +38,7 @@ private:
 
 //   std::array<double, 2> joint_positions_ = {};
   std::array<double, 2> joint_velocities_ = {};
-  std::array<double, 2> joint_efforts_ = {};
+  // std::array<double, 2> joint_efforts_ = {};
   std::array<double, 2> joint_velocity_commands_ = {};
 
   ros::NodeHandle node_handle_;

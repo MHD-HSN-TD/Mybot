@@ -102,17 +102,17 @@ void MybotHardwareInterface::read()
         tokens.erase(std::remove(tokens.begin(), tokens.end(), ""),
                      tokens.end());
 
-        if (tokens.size() != 2) {
+        if (tokens.size() != 4) {
             ROS_WARN_STREAM(
                 "Received message did not contain the right number of tokens. Expected 5, but got "
                     << tokens.size() << "\n" << serial_message);
             return;
         }
 
-        // joint_positions_[0] = rotationsToRadians(std::stod(tokens[0]));
-        // joint_positions_[1] = rotationsToRadians(std::stod(tokens[1]));
-        joint_velocities_[0] =radPerSecTORPS(joint_velocity_commands_[0]); //? feedBack is the same input
-        joint_velocities_[1] = radPerSecTORPS(joint_velocity_commands_[1]); //? feedBack is the same input
+        joint_positions_[0] = rotationsToRadians(std::stod(tokens[0]));
+        joint_positions_[1] = rotationsToRadians(std::stod(tokens[1]));
+        joint_velocities_[0] =radPerSecTORPS(std::stod(tokens[2])); //? feedBack is the same input
+        joint_velocities_[1] = radPerSecTORPS(std::stod(tokens[3])); //? feedBack is the same input
         // const auto battery_voltage = std::stod(tokens[4]);
 
         // sensor_msgs::BatteryState battery_msg;
@@ -161,43 +161,6 @@ void MybotHardwareInterface::write(const ros::Duration& elapsed_time)
         serial_port_.close();
     }
 }
-
-// void MybotHardwareInterface::write(const ros::Duration &elapsed_time)
-// {
-//     if (!serial_port_.isOpen())
-//         return;
-
-//     try
-//     {
-//         velocity_joint_soft_limits_interface_.enforceLimits(elapsed_time);
-
-//         // Assuming you have linear and angular velocities
-//         const auto V = linear_velocity;      // Replace with your actual linear velocity
-//         const auto omega = angular_velocity; // Replace with your actual angular velocity
-
-//         // Calculate left and right wheel velocities using the kinematic model
-//         const auto left_velocity = (V - (L * omega) / 2.0) / R;
-//         const auto right_velocity = (V + (L * omega) / 2.0) / R;
-
-//         // Convert wheel velocities to RPM
-//         const auto left_rpm = radPerSecTORPS(left_velocity);
-//         const auto right_rpm = radPerSecTORPS(right_velocity);
-
-//         // Construct and send the serial message
-//         const auto serial_message =
-//             "$" + std::to_string(left_rpm) + ", " + std::to_string(right_rpm) +
-//             "\n";
-
-//         serial_port_.write(serial_message);
-
-//         last_sent_message_ = serial_message;
-//     }
-//     catch (const std::exception &e)
-//     {
-//         ROS_WARN_STREAM("Serial exception: " << e.what());
-//         serial_port_.close();
-//     }
-// }
 
 void MybotHardwareInterface::tryToOpenPort()
 {
